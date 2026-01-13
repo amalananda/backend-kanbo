@@ -80,7 +80,7 @@ export class AppController {
     return {
       name: 'Kanbo API Documentation',
       version: '1.0.0',
-      baseUrl: 'http://localhost:3000',
+      baseUrl: 'http://localhost:3001',
       authentication: {
         'POST /auth/register': 'Register new user',
         'POST /auth/login': 'Login and get JWT token',

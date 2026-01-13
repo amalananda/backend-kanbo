@@ -17,11 +17,11 @@ async function bootstrap() {
 
   // ✅ Enable CORS for frontend
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // Add your frontend URLs
+    origin: ['http://localhost:3001', 'http://localhost:3000'], // Add your frontend URLs
     credentials: true,
   })
 
-  await app.listen(3000)
-  console.log(`🚀 Application is running on: http://localhost:3000`)
+  await app.listen(3001)
+  console.log(`🚀 Application is running on: http://localhost:3001`)
 }
 bootstrap()
