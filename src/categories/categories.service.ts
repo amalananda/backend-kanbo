@@ -80,7 +80,7 @@ export class CategoriesService {
     return {
       category,
       stats: {
-        total: parseInt(stats.total_task) || 0,
+        total: parseInt(stats.task_count) || 0,
         completed: parseInt(stats.completed_task) || 0,
         todo: parseInt(stats.todo_task) || 0,
       }
