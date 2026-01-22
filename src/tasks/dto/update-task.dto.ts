@@ -1,5 +1,6 @@
-import { IsOptional, IsString, IsUUID, IsEnum } from 'class-validator'
-import { TaskStatus } from '../../entities/task.entity'
+// src/tasks/dto/update-task.dto.ts
+import { IsOptional, IsString, IsUUID, IsEnum, IsDateString } from 'class-validator'
+import { TaskStatus, TaskPriority } from '../../entities/task.entity'
 
 export class UpdateTaskDto {
   @IsOptional()
@@ -11,10 +12,22 @@ export class UpdateTaskDto {
   description?: string
 
   @IsOptional()
-  @IsUUID()
-  category_id?: string
+  @IsString()
+  icon?: string
+
+  @IsOptional()
+  @IsEnum(TaskPriority)
+  priority?: TaskPriority
 
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus
+
+  @IsOptional()
+  @IsDateString()
+  due_date?: string
+
+  @IsOptional()
+  @IsUUID()
+  category_id?: string
 }
