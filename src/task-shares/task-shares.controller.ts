@@ -33,36 +33,37 @@ export class TaskSharesController {
     return this.taskSharesService.findSharedByMe(user.id)
   }
 
+  // FIX: Pindahkan endpoint check-permission SEBELUM :id agar tidak tertimpa
+  @Get('check-permission/:taskId')
+  async checkPermission(@Param('taskId') taskId: string, @CurrentUser() user: any) {
+    const hasPermission = await this.taskSharesService.checkPermission(taskId, user.id)
+    return { hasPermission }
+  }
+
   @Get('task/:taskId')
-  async findByTask(@Param('taskId') taskId: string) {
-    return this.taskSharesService.findByTask(taskId)
+  async findByTask(@Param('taskId') taskId: string, @CurrentUser() user: any) {
+    return this.taskSharesService.findByTask(taskId, user.id)
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.taskSharesService.findOne(id)
+  async findOne(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.taskSharesService.findOne(id, user.id)
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createTaskShareDto: any, @CurrentUser() user: any) {
-    return this.taskSharesService.create({ ...createTaskShareDto, shared_by_user_id: user.id })
+    return this.taskSharesService.create({ ...createTaskShareDto, shared_by_user_id: user.id }, user.id)
   }
 
   @Patch(':id/permission')
-  async updatePermission(@Param('id') id: string, @Body('permission') permission: SharePermission) {
-    return this.taskSharesService.updatePermission(id, permission)
+  async updatePermission(@Param('id') id: string, @Body('permission') permission: SharePermission, @CurrentUser() user: any) {
+    return this.taskSharesService.updatePermission(id, permission, user.id)
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id') id: string) {
-    return this.taskSharesService.delete(id)
-  }
-
-  @Get('check-permission')
-  async checkPermission(@Param('taskId') taskId: string, @CurrentUser() user: any) {
-    const hasPermission = await this.taskSharesService.checkPermission(taskId, user.id)
-    return { hasPermission }
+  async delete(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.taskSharesService.delete(id, user.id)
   }
 }
