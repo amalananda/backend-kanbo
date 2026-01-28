@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -23,6 +24,22 @@ export class UsersController {
   @Get()
   async findAll() {
     return this.usersService.findAll()
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('search')
+  async searchUsers(
+    @Query('q') query: string,
+    @Query('limit') limit: string = '5',
+    @Query('page') page: string = '1',
+    @CurrentUser() user: any,
+  ) {
+    return this.usersService.searchUsers(
+      query,
+      user.id,
+      parseInt(limit),
+      parseInt(page)
+    )
   }
 
   @UseGuards(JwtAuthGuard)
