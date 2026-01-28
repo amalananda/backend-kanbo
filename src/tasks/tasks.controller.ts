@@ -66,7 +66,7 @@ export class TasksController {
   }
   @Get(':id')
   async findOne(@Param('id') id: string, @CurrentUser() user: any) {
-    return this.tasksService.findOne(id, user.id)
+    return this.tasksService.findOneWithAccess(id, user.id)
   }
   @Post()
   @HttpCode(HttpStatus.CREATED)
