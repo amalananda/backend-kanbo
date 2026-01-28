@@ -1,3 +1,4 @@
+// src/common/interfaces/pagination.interface.ts
 export class PaginationMeta {
   page: number
   limit: number
