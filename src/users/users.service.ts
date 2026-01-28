@@ -17,6 +17,64 @@ export class UsersService {
       select: ['id', 'email', 'username', 'full_name', 'avatar_url', 'created_at', 'updated_at'],
     })
   }
+
+  async searchUsers(
+    query: string,
+    currentUserId: string,
+    limit: number = 5,
+    page: number = 1,
+  ): Promise<{
+    data: User[]
+    meta: {
+      total: number
+      page: number
+      limit: number
+      hasMore: boolean
+    }
+  }> {
+    // Validate limit (max 50)
+    const take = Math.min(limit, 50)
+    const skip = (page - 1) * take
+
+    // Minimum query length
+    if (!query || query.trim().length < 2) {
+      return {
+        data: [],
+        meta: {
+          total: 0,
+          page,
+          limit: take,
+          hasMore: false,
+        }
+      }
+    }
+    const searchTerm = `%${query.toLowerCase()}%`
+
+    // Search by username, email, or full_name
+    // Exclude current user
+    const [users, total] = await this.userRepo
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.email', 'user.username', 'user.full_name', 'user.avatar_url', 'user.created_at', 'user.updated_at'])
+      .where('user.id != :currentUserId', { currentUserId })
+      .andWhere(
+        '(LOWER(user.username) LIKE :searchTerm OR LOWER(user.email) LIKE :searchTerm OR LOWER(user.full_name) LIKE :searchTerm)',
+        { searchTerm }
+      )
+      .orderBy('user.username', 'ASC')
+      .skip(skip)
+      .take(take)
+      .getManyAndCount()
+    return {
+      data: users,
+      meta: {
+        total,
+        page,
+        limit: take,
+        hasMore: skip + users.length < total,
+      }
+    }
+  }
+
   async findOne(id: string): Promise<User> {
     const user = await this.userRepo.findOne({
       where: { id },
